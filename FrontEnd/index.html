@@ -6,36 +6,97 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
-	<link rel="stylesheet" href="./assets/style.css">
+	<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header>
-	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
-	<nav>
-		<ul>
-			<li>projets</li>
-			<li>contact</li>
-			<li>login</li>
-			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
-		</ul>
-	</nav>
+	<div class="banner">
+		<button class="banner-edit-button">
+			<i class="fa-regular fa-pen-to-square"></i>
+			<p>Mode édition</p>
+		</button>
+		<button class="banner-publish-button">publier les changements</button>
+	</div>
+	<div class="header-main">
+		<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+		<nav>
+			<ul>
+				<li><a href="index.html" class="nav-selected">projets</a></li>
+				<li>contact</li>
+				<li><a class="nav-login" href="login.html">login</a></li>
+				<li><img src="assets/icons/instagram.png" alt="Instagram"></li>
+			</ul>
+		</nav>
+	</div>
 </header>
 <main>
+	<dialog class="modal">
+		<i class="fa-solid fa-xmark modal-close"></i>
+		<div class="modal-content">
+			<h3>Galerie photo</h3>
+			<div class="modal-gallery"></div>
+			<span class="modal-line"></span>
+			<button class="modal-add-photo">Ajouter une photo</button>
+			<p class="modal-delete">Supprimer la galerie</p>
+		</div>
+		<div class="modal-content-two">
+			<i class="fa-solid fa-arrow-left modal-return"></i>
+            <div class="modal-content-add-work">
+                <h3>Ajout photo</h3>
+                <form action="">
+                    <div class="add-img-form">
+                        <i class="fa-sharp fa-regular fa-image"></i>
+                        <img src="" class="selected-img">
+                        <label for="photo" class="form-add-img-button">+ Ajouter photo</label>
+                        <input class="form-photo" id="photo" type="file" name="photo">
+                        <p>jpg, png : 4mo max</p>
+                    </div>
+                    <div>
+                        <div class="modal-add-work-input">
+                            <label for="titre">Titre</label>
+                            <input class="form-titre" type="text" name="titre" autocomplete="off">
+                        </div>
+                        <div class="modal-add-work-input">
+                            <label for="categorie">Catégorie</label>
+                            <select class="form-category" name="categorie">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <p class="message-error">Veuillez remplir tous les champs pour ajouter un projet</p>
+                <span class="modal-line"></span>
+                <button class="modal-add-work-button">Valider</button>
+            </div>
+		</div>
+	</dialog>
 	<section id="introduction">
 		<figure>
-			<img src="./assets/images/sophie-bluel.png" alt="">
+			<img src="assets/images/sophie-bluel.png" alt="">
+			<button class="introduction-edit-button">
+				<i class="fa-regular fa-pen-to-square"></i>
+				<span>modifier</span>
+			</button>
 		</figure>
 		<article>
 			<h2>Designer d'espace</h2>
 			<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
-			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
+			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l'esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<div class="portfolio-project">
+			<h2>Mes Projets</h2>
+			<button class="portfolio-edit-button">
+				<i class="fa-regular fa-pen-to-square"></i>
+				<span>modifier</span>
+			</button>
+		</div>
 		<div class="filters"></div>
 		<div class="gallery"></div>
 	</section>
@@ -53,7 +114,6 @@
 		</form>
 	</section>
 </main>
-
 <footer>
 	<nav>
 		<ul>
