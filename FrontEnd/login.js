@@ -1,8 +1,8 @@
 /***** Constantes *****/
 const email = document.querySelector(".login-email");
 const password = document.querySelector(".login-password");
-const error = document.querySelector(".error");
 const loginButton = document.querySelector(".login-button");
+const loginError = document.querySelector(".login-error");
 
 /***** Fonctions *****/
 function login() {
@@ -14,18 +14,15 @@ function login() {
         body: JSON.stringify({
             email: email.value,
             password: password.value,
-        }),
-        mode: "cors",
-        credentials: "same-origin",
+        })
     })
         .then(response => response.json())
         .then(data => {
-            let token = data.token;
-            localStorage.setItem("token", token);
-            if (token) {
-                window.location.href = "index.html";
+            localStorage.setItem("token", data.token);
+            if (data.token) {
+                document.location.href = "index.html";
             } else {
-                error.style.display = "flex";
+                loginError.style.display = "flex";
             }
         });
 }

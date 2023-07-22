@@ -23,6 +23,10 @@ const selectedImage = document.querySelector(".selected-img");
 const messageError = document.querySelector(".message-error");
 const modalAddWorkButton = document.querySelector(".modal-add-work-button");
 
+const addImgFormI = document.querySelector(".add-img-form i");
+const addImgFormLabel = document.querySelector(".add-img-form label");
+const addImgFormP = document.querySelector(".add-img-form p");
+
 
 /***** Variables *****/
 let works = [];
@@ -33,13 +37,13 @@ let token = localStorage.getItem("token");
 
 
 /***** Fonctions *****/
-async function worksFetch() {
-    await fetch("http://localhost:5678/api/works")
+function worksFetch() {
+    fetch("http://localhost:5678/api/works")
         .then(response => response.json())
         .then(data => {
             works = data;
             displayProjects(works);
-            createModal(works);
+            createGalleryModal(works);
         });
 }
 
@@ -50,6 +54,7 @@ function categoriesFetch() {
             categories = data;
             displayCategories(categories);
 
+            // Select
             categories.forEach((category) => {
                 const option = document.createElement("option");
         
@@ -61,6 +66,7 @@ function categoriesFetch() {
         });
 }
 
+// Galerie
 function displayProjects(works, category) {
     gallery.innerHTML = "";
 
@@ -82,6 +88,7 @@ function displayProjects(works, category) {
     });
 }
 
+// Filtres
 function displayCategories(categories) {
     const allButton = document.createElement("button");
     filters.appendChild(allButton);
@@ -107,6 +114,7 @@ function displayCategories(categories) {
     });
 }
 
+// Boutons
 function selectFilter(id) {
     if (filterSelected != id) {
         filters.children[filterSelected].classList.remove("filter-selected");
@@ -115,6 +123,7 @@ function selectFilter(id) {
     }
 }
 
+// Connexion
 if (token) {
     banner.style.display = "flex";
     introductionEditButton.style.display = "flex";
@@ -127,7 +136,7 @@ if (token) {
     });
 }
 
-// Ajouts d'évènements liés à la modale
+// Ecouteurs modale O/F
 bannerEditButton.addEventListener("click", () => { 
     modal.showModal();
  });
@@ -144,12 +153,42 @@ modalClose.addEventListener("click", () => {
     modal.close() 
 });
 
-window.addEventListener("click", (e) => {
-    if (e.target === modal) {
+window.addEventListener("click", (event) => {
+    if (event.target === modal) {
         modal.close();
     }
 });
 
+// Galerie modale
+function createGalleryModal(works) {
+    let modalGalleryImage = "";
+
+    works.forEach((work) => {
+        modalGalleryImage = modalGalleryImage +
+            `<div class="modal-gallery-image">
+                <img src="${work.imageUrl}">
+                <i class="fa-regular fa-trash-can modal-trash" data-id="${work.id}"></i>
+                <i class="fa-solid fa-arrows-up-down-left-right modal-arrow"></i>
+                <p>éditer</p>
+            </div>`;
+    });
+
+    modalGallery.innerHTML = modalGalleryImage;
+
+    const trashes = document.querySelectorAll(".modal-trash");
+
+    trashes.forEach((trash) => {
+        trash.addEventListener("click", () => {
+            const workId = trash.getAttribute("data-id");
+            fetch(`http://localhost:5678/api/works/${workId}`, {
+                method: "DELETE", 
+                headers: { Authorization: `Bearer ${token}` }})
+                .then(worksFetch());
+        });
+    });
+}
+
+// Ecouteurs modale page
 modalAddPhoto.addEventListener("click", () => {
     modalContent.style.display = "none";
     modalContentTwo.style.display = "flex";
@@ -160,53 +199,26 @@ modalReturn.addEventListener("click", () => {
     modalContentTwo.style.display = "none";
 });
 
-function createModal(works) {
-    let modalContentHTML = "";
-
-    works.forEach((work) => {
-        modalContentHTML = modalContentHTML +
-            `<div class="modal-gallery-edit">
-                <img src="${work.imageUrl}">
-                <i class="fa-regular fa-trash-can modal-trash" data-id="${work.id}"></i>
-                <i class="fa-solid fa-arrows-up-down-left-right modal-arrow"></i>
-                <p>éditer</p>
-            </div>`;
-    });
-
-    modalGallery.innerHTML = modalContentHTML;
-
-    const trashes = document.querySelectorAll(".modal-trash");
-
-    trashes.forEach((trash) => {
-        trash.addEventListener("click", () => {
-            const workId = trash.getAttribute("data-id");
-            fetch(`http://localhost:5678/api/works/${workId}`, { 
-                method: "DELETE", 
-                headers: { Authorization: `Bearer ${token}` }})
-                .then(worksFetch());
-        });
-    });
-}
-
+// Reader
 formPhoto.addEventListener("change", () => {
     const file = formPhoto.files[0];
     const fileReader = new FileReader();
 
-    fileReader.onload = (e) => {
-        selectedImage.src = e.target.result;
-        const addImgForm = document.querySelector(".add-img-form");
-        const formElements = addImgForm.querySelectorAll(".add-img-form > *");
-
-        formElements.forEach((element) => {
-            element.style.display = "none";
-        });
+    fileReader.onload = (event) => {
+        selectedImage.src = event.target.result;
         selectedImage.style.display = "flex";
+
+        addImgFormI.style.display = "none";
+        addImgFormLabel.style.display = "none";
+        addImgFormP.style.display = "none";
     };
+    
     fileReader.readAsDataURL(file);
 });
 
+// Ajout
 function addWork() {
-    if (formPhoto.value === '' || formTitre.value === '' || formCategory.value === '') {
+    if (formPhoto.value == "" || formTitre.value == "" || formCategory.value == "") {
         messageError.style.display = "block";
         
     } else {
@@ -229,6 +241,15 @@ function addWork() {
                 messageError.style.display = "none";
                 modalContent.style.display = "flex";
                 modalContentTwo.style.display = "none";
+
+                formPhoto.value = ""
+                formTitre.value = "";
+                formCategory.value = "";
+
+                selectedImage.style.display = "none";
+                addImgFormI.style.display = "flex";
+                addImgFormLabel.style.display = "flex";
+                addImgFormP.style.display = "flex";
             });
     }
 }
